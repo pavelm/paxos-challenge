@@ -5,9 +5,12 @@ open System.IO
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Cors.Infrastructure
 open Microsoft.AspNetCore.Hosting
+open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.Logging
 open Microsoft.Extensions.DependencyInjection
 open Giraffe
+
+open FSharp.Control.Tasks
 
 // ---------------------------------
 // Models
@@ -55,13 +58,32 @@ let indexHandler (name : string) =
     let view      = Views.index model
     htmlView view
 
+
+
+let processInput<'t> f =
+    fun (next : HttpFunc) (ctx : HttpContext) ->
+        task {
+            let! request = ctx.BindModelAsync<'t>()
+            let response = f request
+            return! json response next ctx
+        }
+
+let optionResponse msg = function 
+    | Some x -> json x 
+    | None -> RequestErrors.NOT_FOUND msg
+
+
 let webApp =
+    let (toHash,fromHash) = Messages.api
+    
     choose [
         GET >=>
             choose [
                 route "/" >=> indexHandler "world"
                 routef "/hello/%s" indexHandler
+                routef "/messages/%s" (fromHash >> optionResponse "Digest not found")
             ]
+        POST >=> route "/messages" >=> processInput toHash
         setStatusCode 404 >=> text "Not Found" ]
 
 // ---------------------------------
