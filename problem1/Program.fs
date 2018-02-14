@@ -1,7 +1,6 @@
 module problem1.App
 
 open System
-open System.IO
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Cors.Infrastructure
 open Microsoft.AspNetCore.Hosting
@@ -11,53 +10,6 @@ open Microsoft.Extensions.DependencyInjection
 open Giraffe
 
 open FSharp.Control.Tasks
-
-// ---------------------------------
-// Models
-// ---------------------------------
-
-type Message =
-    {
-        Text : string
-    }
-
-// ---------------------------------
-// Views
-// ---------------------------------
-
-module Views =
-    open GiraffeViewEngine
-
-    let layout (content: XmlNode list) =
-        html [] [
-            head [] [
-                title []  [ encodedText "problem1" ]
-                link [ _rel  "stylesheet"
-                       _type "text/css"
-                       _href "/main.css" ]
-            ]
-            body [] content
-        ]
-
-    let partial () =
-        h1 [] [ encodedText "problem1" ]
-
-    let index (model : Message) =
-        [
-            partial()
-            p [] [ encodedText model.Text ]
-        ] |> layout
-
-// ---------------------------------
-// Web app
-// ---------------------------------
-
-let indexHandler (name : string) =
-    let greetings = sprintf "Hello %s, from Giraffe!" name
-    let model     = { Text = greetings }
-    let view      = Views.index model
-    htmlView view
-
 
 
 let processInput<'t> f =
@@ -72,15 +24,12 @@ let optionResponse msg = function
     | Some x -> json x 
     | None -> RequestErrors.NOT_FOUND msg
 
-
 let webApp =
     let (toHash,fromHash) = Messages.api
     
     choose [
         GET >=>
             choose [
-                route "/" >=> indexHandler "world"
-                routef "/hello/%s" indexHandler
                 routef "/messages/%s" (fromHash >> optionResponse "Digest not found")
             ]
         POST >=> route "/messages" >=> processInput toHash
@@ -123,13 +72,9 @@ let configureLogging (builder : ILoggingBuilder) =
 
 [<EntryPoint>]
 let main _ =
-    let contentRoot = Directory.GetCurrentDirectory()
-    let webRoot     = Path.Combine(contentRoot, "WebRoot")
     WebHostBuilder()
         .UseKestrel()
-        .UseContentRoot(contentRoot)
         .UseIISIntegration()
-        .UseWebRoot(webRoot)
         .Configure(Action<IApplicationBuilder> configureApp)
         .ConfigureServices(configureServices)
         .ConfigureLogging(configureLogging)
