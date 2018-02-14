@@ -8,7 +8,7 @@ type Sku = {
     name : string
     price : int
 } with 
-    override x.ToString() = sprintf "(%s,%d)" x.name x.price
+    override x.ToString() = sprintf "%s %d" x.name x.price
     static member create(name,price) = { name = name; price = Int32.Parse price}
 
 
@@ -95,6 +95,29 @@ let findLargest (search : int -> Sku[] -> Sku option) numSkus  balance (skus : S
             }
     sequence numSkus balance skus
 
+let findClosestToBalance target solutions = 
+    let sumPrices = List.sumBy (fun x -> x.price)
+    
+    let rec loop ((sum,items) as acc) all = 
+        match Seq.tryHead all with
+        | None -> acc
+        | Some head -> 
+            let total = sumPrices head 
+            let tail = Seq.tail all
+            if total = target then
+                (total,head)
+            elif total > sum then
+                loop (total,head)  tail
+            else
+                loop acc tail
+
+    let (total,solution) = loop (0,[]) solutions
+    if total = 0 then
+        None
+    else
+        Some solution
+
+
 [<EntryPoint>]
 let main argv =
     let filename = argv.[0]
@@ -105,19 +128,18 @@ let main argv =
         let file = File.ReadAllLines(filename)
         let skus = file |> parse
         
-        let badSearch max skus = 
-            let filtered = skus |> Array.filter (fun sku -> sku.price <= max) 
-            if Array.isEmpty filtered then
-                None
-            else
-                filtered |> Array.maxBy (fun sku -> sku.price ) |> Some
+                
 
         let searchAlgo = binSearch
         let sw = System.Diagnostics.Stopwatch()
         sw.Start()
-        let results = findLargest searchAlgo 2 balance skus |> Seq.toArray //iterate through all
+        let results = findLargest searchAlgo 2 balance skus 
+        let solution = findClosestToBalance balance results
         sw.Stop()
-        results |> Seq.length |> printfn "SOLUTION results %O"
-        printfn "Total elapsed time=%O ticks=%d" sw.ElapsedMilliseconds sw.ElapsedTicks
+
+        match solution with 
+        | Some x -> x |> List.map string |> String.concat ", " |> printfn "%s"
+        | None -> printfn "Not possible"
+        printfn "Total elapsed time=%Oms" sw.ElapsedMilliseconds
 
     0 // return an integer exit code
