@@ -7,6 +7,7 @@ open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.Logging
 open Microsoft.Extensions.DependencyInjection
+
 open Giraffe
 
 open FSharp.Control.Tasks
@@ -78,6 +79,7 @@ let main _ =
         .Configure(Action<IApplicationBuilder> configureApp)
         .ConfigureServices(configureServices)
         .ConfigureLogging(configureLogging)
+        .UseUrls("http://+:8080")
         .Build()
         .Run()
     0
