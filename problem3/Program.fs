@@ -29,7 +29,7 @@ let main argv =
         | 1 -> argv
         | 2 -> argv |> Array.skip 1
         | _ -> 
-            printfn "Usage: problem3 FILENAME BALANCE"
+            printfn "Usage: problem3 INPUT"
             Environment.Exit(-1)
             [||]
 

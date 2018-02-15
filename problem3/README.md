@@ -1,14 +1,10 @@
 # Solution
 
-Straight forward implementation of computing the SHA256 hash using library functions. 
+The strategy here was to find all occurences of `X`s and to compute the total number of combinations substituting each `X` with a `0` or `1`. Then, for each combination, it breaks down the iteration number to binary representation in which each binary digit maps to whether to put a `0` or `1` in that location for the `X`. The input characters are then mapped over and replace the `X`s with the appropriate binary digit for a specific iteration. 
 
 ## Performance
 
-The major bottleneck is the CPU computing the SHA256 hash, the more users start using the service, the more CPU this will take and eventually could start starving out users. 
-
-I ended up storing the state in memory using a dictionary, but in reality this should be store in a more durable storage such as Azure Blob storage or AWS S3 or some distributed datastore (e.g. Redis), where the key would be the computed hash and the content would be the message. 
-
-The microservices can be scaled horizontally and run behind a load balancer to even the load and storage of hash -> message mapping would be partitioned by the hash and taken care of by the storage mechanism.
+The runtime of the algorithm is **O(2^n)** where **n** represents the number of `X`s in the input. The iterations are using lazy sequence generators for performance reasons and otherwise using recursion or collecting all possible values before printing them can cause the program to run out of memory on very large inputs.
 
 
 ## Build and test the application
@@ -21,7 +17,11 @@ Run the `run.sh` script in order to restore, build, and run the application:
 $ ./run.sh
 ```
 
-After the application has started visit [http://localhost:8080](http://localhost:8080) in your preferred browser. Or visit [http://159.203.122.126:8080](http://159.203.122.126:8080)
-
 ## Docker 
-Run the `docker_run.sh` script to run the project build in a docker container. It will also launch the web server and expose port 8080.
+Run the `docker_run.sh` script to run the project build in a docker container. 
+
+Pass input 
+
+```
+$ ./docker_run.sh 10X10X0
+```

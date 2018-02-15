@@ -23,5 +23,22 @@ $ ./run.sh
 
 After the application has started visit [http://localhost:8080](http://localhost:8080) in your preferred browser. Or visit [http://159.203.122.126:8080](http://159.203.122.126:8080)
 
+Examples
+
+```
+curl -X POST -H "Content-Type: application/json" -d '{"message": "foo"}' http://159.203.122.126:8080/messages
+{"digest":"2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae"}
+
+
+curl -i  http://159.203.122.126:8080/messages/2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae
+HTTP/1.1 200 OK
+Date: Thu, 15 Feb 2018 14:14:17 GMT
+Content-Type: application/json
+Server: Kestrel
+Content-Length: 17
+
+{"message":"foo"}
+```
+
 ## Docker 
 Run the `docker_run.sh` script to run the project build in a docker container. It will also launch the web server and expose port 8080.
