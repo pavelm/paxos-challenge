@@ -1,16 +1,16 @@
 # Paxos Challenge Solutions
 
-[problem1 solution](problem1/README.md)
+[problem1 solution](problem1/)
 
-[problem2 solution](problem2/README.md)
+[problem2 solution](problem2/)
 
-[problem3 solution](problem3/README.md)
+[problem3 solution](problem3/)
 
 ## Build and test the application
 
 [.NET Core SDK](https://www.microsoft.com/net/learn/get-started) is required to build all of the solutions. 
 
-An alternative to installing the SDK is to use the [Docker build](#Docker).
+An alternative to installing the SDK is to use the [Docker build](#docker).
 
 
 ### Windows
