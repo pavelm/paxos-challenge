@@ -40,7 +40,6 @@ cd problem1
 dotnet run
 ```
 
-After the application has started visit [http://localhost:8080](http://localhost:8080) in your preferred browser. Or visit [http://159.203.122.126:8080](http://159.203.122.126:8080)
 
 ## Docker 
 Run the `docker_run.sh` script in each of the problem directories to run the project build in a docker container. That script also runs the entrypoint and you can pass arguments to the program on the command line. 
