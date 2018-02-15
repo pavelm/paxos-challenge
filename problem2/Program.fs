@@ -127,8 +127,6 @@ let main argv =
     else
         let file = File.ReadAllLines(filename)
         let skus = file |> parse
-        
-                
 
         let searchAlgo = binSearch
         let sw = System.Diagnostics.Stopwatch()
