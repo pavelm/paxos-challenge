@@ -10,3 +10,7 @@ Expanding upon the same reasoning the case with 3 people is essentially similar 
 The code has support for allowing an arbitrary amount of people but I've hard coded it to two as per the question.
 
 There's some conversion between different types of collection data types (Seq,List,Array) which can create some memory pressure as N grows larger. The best fix for this would be to use a **Span<T>** data structure as a virtual array so as to not add to the overhead of copying data and converting types. I didn't want to introduce more complexity and intentionally tried to keep the code simpler and use basic types. In a realistic scenario this can be optimized further by reducing the amount of heap allocation and copying of data.
+
+
+### Running in Docker
+The docker image has a copy of all the files in the current directory. In order for this program to work in a docker image the file inputs must be in this directory. So for instance the `prices.txt` file in this directory will be available to the process running inside the docker container. If you want to use a different file, please copy it to this directory before building the docker image.
