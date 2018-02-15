@@ -1,7 +1,21 @@
-FROM microsoft/dotnet:2.0.0-sdk
-COPY /deploy /app
+# Sample contents of Dockerfile
+# Stage 1
+FROM microsoft/aspnetcore-build AS builder
+WORKDIR /source
+
+# caches restore result by copying csproj file separately
+COPY *.fsproj .
+RUN dotnet restore
+
+# copies the rest of your code
+COPY . .
+RUN dotnet publish --output /app/ --configuration Release
+
+# Stage 2
+FROM microsoft/aspnetcore
 WORKDIR /app
+COPY --from=builder /app .
+
 EXPOSE 8080
-EXPOSE 8085
-EXPOSE 5000
+
 ENTRYPOINT ["dotnet", "problem1.dll"]

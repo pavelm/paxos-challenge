@@ -319,5 +319,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+deploy/
 
 # End of https://www.gitignore.io/api/macos,windows,aspnetcore
