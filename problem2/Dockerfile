@@ -14,7 +14,5 @@ FROM microsoft/dotnet:runtime
 WORKDIR /app
 COPY --from=build-env /app/out ./
 COPY --from=build-env /app ./
-RUN pwd
-RUN ls -l 
 ENTRYPOINT ["dotnet", "problem2.dll"]
 

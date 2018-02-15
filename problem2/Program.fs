@@ -120,7 +120,7 @@ let findClosestToBalance target solutions =
 
 [<EntryPoint>]
 let main argv =
-    printfn "Args=%A" argv
+    printfn "args=%A" argv
     let argv = 
         match argv.Length with
         | 2 -> argv
