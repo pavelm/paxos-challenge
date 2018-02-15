@@ -120,6 +120,16 @@ let findClosestToBalance target solutions =
 
 [<EntryPoint>]
 let main argv =
+    printfn "Args=%A" argv
+    let argv = 
+        match argv.Length with
+        | 2 -> argv
+        | 3 -> argv |> Array.skip 1
+        | _ -> 
+            printfn "Usage: problem2 FILENAME BALANCE"
+            Environment.Exit(-1)
+            [||]
+
     let filename = argv.[0]
     let balance = Int32.Parse argv.[1] 
     if not <| File.Exists filename then
