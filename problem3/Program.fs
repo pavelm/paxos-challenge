@@ -23,6 +23,16 @@ let countCharsOf c (s:string) =
 
 [<EntryPoint>]
 let main argv =
+    printfn "args=%A" argv
+    let argv = 
+        match argv.Length with
+        | 1 -> argv
+        | 2 -> argv |> Array.skip 1
+        | _ -> 
+            printfn "Usage: problem3 FILENAME BALANCE"
+            Environment.Exit(-1)
+            [||]
+
     let input = argv.[0]
     let totalXs = input |> countCharsOf 'X'
     let totalIterations = pown 2 totalXs
@@ -37,8 +47,9 @@ let main argv =
         |> Seq.mapFold (fun xs c -> 
             match c with 
             | 'X' -> 
-                let (x::xs) = xs
-                toChar x,xs
+                let head = xs |> List.head
+                let tail = xs |> List.tail
+                toChar head,tail
             | bit -> bit,xs) digits
         |> fst 
         |> Seq.toArray
